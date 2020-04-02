@@ -134,8 +134,8 @@ class Game():
 class Player:
     
     def __init__(self,color):
-        self.x=200
-        self.y=200
+        self.x=400
+        self.y=400
         self.r=15
         self.color=color
     

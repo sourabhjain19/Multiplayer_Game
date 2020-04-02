@@ -60,12 +60,22 @@ class Game():
         self.counter=0
         self.GameController=GameController()
         self.player=Player((0,0,0))
-        self.anotherplayer=Player((random.randrange(0,255),random.randrange(0,255),random.randrange(0,255)))
+        self.anotherplayer=[Player((random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))),Player((random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))),Player((random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))),Player((random.randrange(0,255),random.randrange(0,255),random.randrange(0,255))),Player((random.randrange(0,255),random.randrange(0,255),random.randrange(0,255)))]
         self.network=Network()
 
-    def updatedata(self,fullMsg):
+    def updatedata(self,fullMsg,gamerunning):
+
         self.GameController.updaterandomlist(fullMsg[0])
-        self.anotherplayer.setposition(fullMsg[1],fullMsg[2],fullMsg[3])
+        for i in range(len(fullMsg[1])):
+            self.anotherplayer[i].setposition(fullMsg[1][i][0],fullMsg[1][i][1],fullMsg[1][i][2])
+            x1,y1,r1=self.player.getposition()
+            x2,y2,r2=fullMsg[1][i][0],fullMsg[1][i][1],fullMsg[1][i][2]
+            if ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) < ((r1 + r2) * (r1 + r2)):
+                if r1<r2:
+                    self.player.setposition(x1,y1,0)
+                    gamerunning=False
+                
+        return gamerunning
         
     def run(self):
         
@@ -83,11 +93,12 @@ class Game():
 
             if gamerunning:
                 
-                self.updatedata(fullMsg)
+                gamerunning=self.updatedata(fullMsg,gamerunning)
 
                 self.GameController.redraw()
 
-                self.anotherplayer.run()
+                for i in range(len(fullMsg[1])):
+                    self.anotherplayer[i].run()
 
                 self.GameController.refreshpoints()
                 
@@ -107,6 +118,7 @@ class Game():
                     gamerunning=False
             else:
                 font = pygame.font.SysFont('Consolas', 60)
+                self.network.s.close()
                 text="Game Over"
                 screen.fill(background_colour)
                 screen.blit(font.render(text, True, (0, 0, 0)), (250, 400))
@@ -116,14 +128,14 @@ class Game():
                 if event.type == pygame.USEREVENT: 
                     self.counter += 1
                 if event.type == pygame.QUIT:
-                    network.s.close()
+                    self.network.s.close()
                     running = False
-
+                    
 class Player:
     
     def __init__(self,color):
-        self.x=400
-        self.y=400
+        self.x=600
+        self.y=600
         self.r=15
         self.color=color
     
