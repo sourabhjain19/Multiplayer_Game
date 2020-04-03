@@ -30,9 +30,11 @@ fullMsg=[]
 completedata=[[]]*5
 totalcount=0
 
+counter=0
+
 count=0
 def on_new_client(c,addr,count):
-    global fullMsg,completedata,totalcount
+    global counter,fullMsg,completedata,totalcount
     while True:
         
         if count==0:
@@ -41,7 +43,9 @@ def on_new_client(c,addr,count):
 
             completedata[0]=[fullMsg[1],fullMsg[2],fullMsg[3]]
             
-            time.sleep(0.00000000000000000001)
+            counter=fullMsg[4]
+
+            time.sleep(0.0001)
 
             tempdata=[fullMsg[0],completedata[1:totalcount]]
             msg = pickle.dumps(tempdata)
@@ -53,9 +57,9 @@ def on_new_client(c,addr,count):
     
             completedata[1]=[fullMsg[1],fullMsg[2],fullMsg[3]]
             
-            time.sleep(0.00000000000000000001)
+            time.sleep(0.0001)
             
-            tempdata=[fullMsg[0],completedata[:1]+completedata[2:totalcount]]
+            tempdata=[fullMsg[0],completedata[:1]+completedata[2:totalcount],counter]
             msg = pickle.dumps(tempdata)
             c.send(msg)
 
@@ -65,9 +69,9 @@ def on_new_client(c,addr,count):
 
             completedata[2]=[fullMsg[1],fullMsg[2],fullMsg[3]]
             
-            time.sleep(0.00000000000000000001)
+            time.sleep(0.001)
             
-            tempdata=[fullMsg[0],completedata[:2]+completedata[3:totalcount]]
+            tempdata=[fullMsg[0],completedata[:2]+completedata[3:totalcount],counter]
             msg = pickle.dumps(tempdata)
             c.send(msg)
 
@@ -77,9 +81,9 @@ def on_new_client(c,addr,count):
 
             completedata[3]=[fullMsg[1],fullMsg[2],fullMsg[3]]
             
-            time.sleep(0)
+            time.sleep(0.0001)
             
-            tempdata=[fullMsg[0],completedata[:3]+completedata[4:totalcount]]
+            tempdata=[fullMsg[0],completedata[:3]+completedata[4:totalcount],counter]
             msg = pickle.dumps(tempdata)
             c.send(msg)
 
@@ -89,9 +93,9 @@ def on_new_client(c,addr,count):
 
             completedata[4]=[fullMsg[1],fullMsg[2],fullMsg[3]]
             
-            time.sleep(0)
+            time.sleep(0.0001)
             
-            tempdata=[fullMsg[0],completedata[:4]+completedata[5:totalcount]]
+            tempdata=[fullMsg[0],completedata[:4]+completedata[5:totalcount],counter]
             msg = pickle.dumps(tempdata)
             c.send(msg)
             

@@ -102,6 +102,7 @@ class Game():
 
                 self.GameController.refreshpoints()
                 
+                self.counter=fullMsg[2]
                 text = str(self.counter)
                 font = pygame.font.SysFont('Consolas', 30)
                 screen.blit(font.render(text, True, (0, 0, 0)), (10, 10))
@@ -114,19 +115,25 @@ class Game():
 
                 pygame.display.update()
                 
-                if self.counter==100:
+                if self.counter==30:
                     gamerunning=False
             else:
                 font = pygame.font.SysFont('Consolas', 60)
-                self.network.s.close()
-                text="Game Over"
+                #self.network.s.close()
+                x1,y1,r1=self.player.getposition()
+                radius_array=[0,0,0,0,0]
+                for i in range(5):
+                    x2,y2,radius_array[i]=self.anotherplayer[i].getposition()
+                if r1>max(radius_array):
+                    text="Game Over, You WON"
+                else:
+                    text="Game Over, You LOSE"
+
                 screen.fill(background_colour)
-                screen.blit(font.render(text, True, (0, 0, 0)), (250, 400))
+                screen.blit(font.render(text, True, (0, 0, 0)), (50, 400))
                 pygame.display.update()
 
             for event in pygame.event.get():
-                if event.type == pygame.USEREVENT: 
-                    self.counter += 1
                 if event.type == pygame.QUIT:
                     self.network.s.close()
                     running = False

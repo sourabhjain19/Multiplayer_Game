@@ -87,7 +87,7 @@ class Game():
 
         while running:
              
-            self.network.send([self.GameController.getrandomlist(),x,y,r])
+            self.network.send([self.GameController.getrandomlist(),x,y,r,self.counter])
 
             fullMsg=self.network.recieve()
 
@@ -114,14 +114,22 @@ class Game():
 
                 pygame.display.update()
                 
-                if self.counter==100:
+                if self.counter==30:
                     gamerunning=False
             else:
                 font = pygame.font.SysFont('Consolas', 60)
-                self.network.s.close()
-                text="Game Over"
+                #self.network.s.close()
+                x1,y1,r1=self.player.getposition()
+                radius_array=[0,0,0,0,0]
+                for i in range(5):
+                    x2,y2,radius_array[i]=self.anotherplayer[i].getposition()
+                if r1>max(radius_array):
+                    text="Game Over, You WON"
+                else:
+                    text="Game Over, You LOSE"
+
                 screen.fill(background_colour)
-                screen.blit(font.render(text, True, (0, 0, 0)), (250, 400))
+                screen.blit(font.render(text, True, (0, 0, 0)), (50, 400))
                 pygame.display.update()
 
             for event in pygame.event.get():
